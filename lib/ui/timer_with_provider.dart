@@ -3,7 +3,6 @@ import 'package:coundowntimersample/models/timer.dart';
 import 'package:provider/provider.dart';
 
 class TimerWithProvider extends StatelessWidget {
-
   String _printDuration(Duration duration) {
     String twoDigits(int n) {
       if (n >= 10) return "$n";
@@ -18,6 +17,33 @@ class TimerWithProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _timerModel = Provider.of<TimerModel>(context, listen: false);
+
+    void _showFinishDialog() {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Center(child: Text('時間切れです！ \n 減点 3割')),
+              content: Text('ゲームを終了します。'),
+              actions: <Widget>[
+                RaisedButton(
+                  child: Text('是非もなし'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          });
+    }
+
+    Widget _remainingTimeText(String text) {
+      return Text(
+        text,
+        style: const TextStyle(
+            fontSize: 56.0, fontWeight: FontWeight.bold),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -40,9 +66,14 @@ class TimerWithProvider extends StatelessWidget {
                   size: 56.0,
                 ),
                 Expanded(child: Center(child:
-                    Consumer<TimerModel>(builder: (context, timerModel, child) {
-                      final String _remainingTime = _printDuration(Duration(seconds: timerModel.seconds));
-                      debugPrint(_remainingTime);
+                    // ignore: missing_return
+                    Consumer<TimerModel>(builder: (context, timer, child) {
+                  final String _remainingTime =
+                      _printDuration(Duration(seconds: timer.seconds));
+
+                  if (timer.seconds == 0)
+                    _showFinishDialog();
+
                   return Text(
                     _remainingTime,
                     style: const TextStyle(

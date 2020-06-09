@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'dart:async';
 
 class TimerModel with ChangeNotifier {
-  static int _defaultSeconds = 30;
+  static int _defaultSeconds = 15;
   int _seconds = _defaultSeconds;
   static bool _isCounting = false;
 

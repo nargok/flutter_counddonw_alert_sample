@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: TimerWithProvider(), // Providerを使ったケース
-//      home: MyHomePage(title: 'Flutter Demo Home Page'), // Stateful Widgetを使ったケース
+//      home: MyHomePage(title: 'Statefulタイマー'), // Stateful Widgetを使ったケース
       ),
     );
   }
@@ -41,14 +41,10 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-// todo まずstatefulで作ってからprovider管理にする
 class _MyHomePageState extends State<MyHomePage> {
   static bool _isCounting = false;
   static int _defaultSeconds = 10;
   static int _seconds = _defaultSeconds;
-
-  // todo タイマー秒数の管理・変換をどうするか
-  // todo パフォーマンス度外視で作ってみる
 
   Timer _timer;
 
@@ -100,14 +96,6 @@ class _MyHomePageState extends State<MyHomePage> {
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
-
-  @override
-  void initState() {
-    final Duration counts = Duration(seconds: 30);
-    int sec = 3;
-
-    super.initState();
   }
 
   @override
