@@ -30,12 +30,14 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-// todo まずstatefulで作ってからprovider管理にするか
+// todo まずstatefulで作ってからprovider管理にする
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   static bool _isCounting = false;
   static int _defaultSeconds = 5;
   static int _seconds = _defaultSeconds;
+
+  // todo タイマー秒数の管理・変換をどうするか
 
   Timer _timer;
 
@@ -45,19 +47,37 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     if (_isCounting) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          _seconds--;
+        });
+        if (_seconds <= 0) {
+          _showFinishDialog();
+          _timer.cancel();
+        }
+      });
+    } else {
+      _timer.cancel();
     }
-
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _showFinishDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(child: Text('時間切れです！ \n 減点 3割')),
+            content: Text('ゲームを終了します。'),
+            actions: <Widget>[
+              RaisedButton(
+                child: Text('是非もなし'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
@@ -85,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                     child: Center(
                         child: Text(
-                  '02:00:00',
+                  '00:00:0$_seconds',
                   style: const TextStyle(
                       fontSize: 56.0, fontWeight: FontWeight.bold),
                 ))),
@@ -102,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.blueAccent,
                   onPressed: () {
                     debugPrint('カウント開始');
+                    _handleTimer();
                   },
                 ),
                 SizedBox(
@@ -109,12 +130,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 RaisedButton(
                   child: Text(
-                    'カウント停止',
+                    'リセット',
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blueAccent,
+                  color: Colors.blue,
                   onPressed: () {
-                    debugPrint('カウント停止');
+                    debugPrint('リセット');
+                    setState(() {
+                      _seconds = _defaultSeconds;
+                      _isCounting = false;
+                    });
                   },
                 )
               ],
@@ -122,11 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
