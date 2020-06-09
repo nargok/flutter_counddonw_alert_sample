@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:coundowntimersample/models/timer.dart';
+import 'package:coundowntimersample/ui/timer_with_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,13 +13,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<TimerModel>(
+          create: (_) => TimerModel(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: TimerWithProvider(), // Providerを使ったケース
+//      home: MyHomePage(title: 'Flutter Demo Home Page'), // Stateful Widgetを使ったケース
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

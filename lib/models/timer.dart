@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:async';
 
 class TimerModel with ChangeNotifier {
@@ -10,12 +10,19 @@ class TimerModel with ChangeNotifier {
 
   get seconds => _seconds;
 
+  void _countDown() {
+    _seconds--;
+    notifyListeners();
+  }
+
   void handlerTimer() {
+    print('handleTimer started!');
     _isCounting = !_isCounting;
 
     if (_isCounting) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        _seconds--;
+        _countDown();
+        print(_seconds);
 
         if (_seconds <= 0) {
           // todo 0秒になったときの挙動はUIに持たせる
@@ -26,6 +33,12 @@ class TimerModel with ChangeNotifier {
       _timer.cancel();
     }
 
+    notifyListeners();
+  }
+
+  void timerReset() {
+    _seconds = _defaultSeconds;
+    _isCounting = false;
     notifyListeners();
   }
 }
