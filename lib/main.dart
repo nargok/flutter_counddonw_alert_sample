@@ -32,12 +32,12 @@ class MyHomePage extends StatefulWidget {
 
 // todo まずstatefulで作ってからprovider管理にする
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   static bool _isCounting = false;
-  static int _defaultSeconds = 5;
+  static int _defaultSeconds = 10;
   static int _seconds = _defaultSeconds;
 
   // todo タイマー秒数の管理・変換をどうするか
+  // todo パフォーマンス度外視で作ってみる
 
   Timer _timer;
 
@@ -80,8 +80,28 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  @override
+  void initState() {
+    final Duration counts = Duration(seconds: 30);
+    int sec = 3;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final String _remainingTime = _printDuration(Duration(seconds: _seconds));
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -105,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                     child: Center(
                         child: Text(
-                  '00:00:0$_seconds',
+                  _remainingTime,
                   style: const TextStyle(
                       fontSize: 56.0, fontWeight: FontWeight.bold),
                 ))),
