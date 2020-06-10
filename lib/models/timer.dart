@@ -15,17 +15,17 @@ class TimerModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void handlerTimer() {
+  void handlerTimer(Function showFinishDialog) {
     print('handleTimer started!');
     _isCounting = !_isCounting;
 
     if (_isCounting) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         _countDown();
-        print(_seconds);
+//        print(_seconds);
 
         if (_seconds <= 0) {
-          // todo 0秒になったときの挙動はUIに持たせる
+          showFinishDialog();
           _timer.cancel();
         }
       });

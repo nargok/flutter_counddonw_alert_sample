@@ -16,6 +16,8 @@ class TimerWithProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // todo listen trueにできるか => できる
+    // todo でdialogを出すか否かを判定するようにするとか？　できそう
     final _timerModel = Provider.of<TimerModel>(context, listen: false);
 
     void _showFinishDialog() {
@@ -71,9 +73,6 @@ class TimerWithProvider extends StatelessWidget {
                   final String _remainingTime =
                       _printDuration(Duration(seconds: timer.seconds));
 
-                  if (timer.seconds == 0)
-                    _showFinishDialog();
-
                   return Text(
                     _remainingTime,
                     style: const TextStyle(
@@ -93,7 +92,8 @@ class TimerWithProvider extends StatelessWidget {
                   color: Colors.blueAccent,
                   onPressed: () {
                     debugPrint('カウント開始');
-                    _timerModel.handlerTimer();
+                    // todo 進んだが、背景が赤くなってしまっている
+                    _timerModel.handlerTimer(_showFinishDialog);
                   },
                 ),
                 SizedBox(
